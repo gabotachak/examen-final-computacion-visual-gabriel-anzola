@@ -103,9 +103,16 @@ examen-final-computacion-visual-gabriel-anzola/
 
 ## Estado actual
 
-- Fase: **0 (no iniciada)** — solo existen el PDF, `CLAUDE.md` y `todo.md`.
-- Nada de código aún (el usuario pidió primero solo el plan).
+- Fase: **Proyecto completo** — todas las fases 0–7 completadas (2026-06-10).
+- Ej1: pipeline operacional, 6 PNGs generados, YOLOv8n detecta 6 objetos.
+- Ej2: escena 3D funcional, build limpio, capturas y demo.gif en media/.
 
 ## Aprendizajes / notas (append-only conforme avanza)
 
-- _(vacío — añadir hallazgos: versiones que fallan, parámetros que funcionan, comandos de grabación de GIF, etc.)_
+- **Python 3.14 sin wheels**: uv init en 3.14 fallaba con opencv-python/ultralytics. Solución: `uv python pin 3.12` + cambiar `requires-python = ">=3.12"` en pyproject.toml.
+- **OpenCV**: 4.13.0.92 (Python 3.12). NumPy: 2.4.6. Ultralytics: 8.4.64.
+- **`npm create vite` cancelado** si el directorio tiene subcarpetas preexistentes. Solución: scaffold manual de package.json + vite.config.js + index.html.
+- **Node 26**: compatible con Vite 6 y R3F 8 sin problemas.
+- **WebGL headless**: chromium necesita `--enable-unsafe-swiftshader` para renderizar Three.js en modo headless.
+- **GIF de animación**: usar CDP (Chrome DevTools Protocol) con websocket para mantener sesión viva y capturar frames a intervalos. Módulo `ws` añadido como devDependency. Comando: `chromium --headless=new --enable-unsafe-swiftshader --remote-debugging-port=9222`.
+- **Pesos YOLO**: se descargan automáticamente a `yolov8n.pt` en el directorio de trabajo. Excluidos del repo vía `.gitignore` (patrón `*.pt`).

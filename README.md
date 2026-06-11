@@ -291,21 +291,73 @@ Construir una escena 3D interactiva temática que demuestre los fundamentos de g
 
 ## Uso de IA
 
-**Asistente utilizado:** Claude Sonnet 4.6
+**Asistente utilizado:** Claude Sonnet 4.6  
+El proyecto se desarrolló en sesión iterativa con el asistente, donde cada prompt correspondió a una fase de trabajo concreta.
 
-### Prompts principales usados
+---
 
-**Ejercicio 1:**
-> "Implementa un pipeline secuencial de OpenCV con los 8 pasos del PDF: carga, grises, HSV, suavizado gaussiano, Canny, segmentación Otsu+morfología+contornos, detección YOLOv8n, panel comparativo. Python con argparse. Documenta parámetros en consola."
+### Fase 0 — Inicialización del repositorio
 
-**Ejercicio 2:**
-> "Implementa una escena 3D de exploración espacial con React Three Fiber: jerarquía rover (cuerpo/ruedas/cabina/antena), paneles solares que se orientan al rover, astronautas que saludan cuando rover está cerca, bandera que parpadea amarilla. OrbitControls, meshStandardMaterial + meshPhysicalMaterial, directionalLight + sombras, sliders Leva para velocidad/luz/color."
+> "Necesito inicializar un repo git para mi examen final de Computación Visual. El repositorio debe llamarse `examen-final-computacion-visual-gabriel-anzola`. Crea la estructura de carpetas: `ejercicio_1_procesamiento_visual/{src,data,resultados}` y `ejercicio_2_escena_3d_interactiva/{src,media}`, con `.gitkeep` en los vacíos. Genera un `.gitignore` que cubra Python/uv, Node/Vite, pesos de modelos `.pt`, macOS y Linux. Primer commit y crea el repo remoto público en GitHub con `gh`."
 
-**Captura del GIF:**
-> "Script Node.js con CDP para mantener sesión Chromium viva y capturar 14 frames a 500 ms desde http://localhost:5173 con WebGL activo (swiftshader). Guardar como PNGs, luego convertir a GIF con Pillow."
+---
+
+### Fase 1 — Entorno Python con uv
+
+> "Configura el entorno Python para el ejercicio 1 usando `uv`. El sistema tiene Python 3.14 pero OpenCV y ultralytics no tienen wheels para esa versión. Haz `uv init`, fija Python 3.12 con `uv python pin`, ajusta `requires-python` en `pyproject.toml`, y agrega `opencv-python`, `numpy` y `ultralytics`. Muestra cómo hacer smoke test de las tres dependencias."
+
+> "El `uv python pin 3.12` falla porque `pyproject.toml` tiene `requires-python = '>=3.13'`. Corrígelo y vuelve a ejecutar el pin."
+
+---
+
+### Fase 2 — Pipeline OpenCV
+
+> "Implementa `src/main.py` con el pipeline completo de 8 operaciones: (1) cargar imagen con `cv2.imread` y validar, (2) escala de grises, (3) conversión a HSV, (4) suavizado gaussiano con kernel `(5,5)`, (5) Canny con umbrales 50/150, (6a) segmentación clásica con threshold Otsu + morfología OPEN→CLOSE + `findContours` + bounding boxes, (6b) detección YOLOv8n con conf=0.25, (7) guardar todos los resultados intermedios con los nombres exactos del PDF, (8) panel comparativo. Usar argparse. Imprimir en consola todos los parámetros usados para trazabilidad."
+
+> "El modelo YOLOv8 se descarga en el directorio de trabajo como `yolov8n.pt`. Asegúrate de que `.gitignore` ya cubre `*.pt` para no versionar los pesos."
+
+---
+
+### Fase 3 — Entorno React Three Fiber
+
+> "Quiero crear un proyecto Vite + React en `ejercicio_2_escena_3d_interactiva/` pero `npm create vite@latest . -- --template react` cancela porque el directorio ya tiene las subcarpetas `src/` y `media/`. ¿Cómo lo resuelvo sin borrar las carpetas existentes?"
+
+> "Haz el scaffold manual: crea `package.json` con React 18, `@react-three/fiber`, `@react-three/drei`, `leva`, Three.js 0.170 y Vite 6. Crea `vite.config.js`, `index.html` y `src/main.jsx`. Verifica que `npm run build` compile sin errores."
+
+---
+
+### Fase 4 — Escena 3D de exploración espacial
+
+> "Implementa la escena 3D completa en `src/App.jsx`. Tema: exploración espacial (base lunar). Requisitos obligatorios: (1) jerarquía de objetos — `Rover` como grupo padre con ruedas×4, cuerpo, cabina de vidrio y antena rotatoria como hijos; `SolarPanel` con soporte y panel como hijos; (2) transformaciones explícitas de traslación/rotación/escala; (3) `OrbitControls` con límites; (4) `meshStandardMaterial` con metalness/roughness y `meshPhysicalMaterial` con transmission para vidrio; (5) `directionalLight` tipo sol cálido + `ambientLight` frío + `pointLight` de la base, sombras activadas; (6) animaciones con `useFrame`: rover en órbita circular, antena rotatoria, astronautas flotando, paneles orientándose hacia la posición del rover; (7) interacción entre elementos: bandera se pone amarilla cuando el rover pasa cerca, astronautas saludan (brazo oscila) cuando el rover está a menos de 5 unidades; (8) controles Leva con sliders de velocidad del rover, intensidad solar, luz ambiente y color picker para la bandera."
+
+> "La escena funciona pero hay un componente `Scene` que quedó sin usar en el archivo. Elimínalo para mantener el código limpio."
+
+---
+
+### Fase 5 — Evidencias visuales
+
+> "El servidor Vite corre en localhost:5173. Necesito capturas de la escena 3D. Usa `chromium --headless=new` para tomar screenshots pero el canvas aparece negro. ¿Qué flag falta para que Three.js renderice en modo headless?"
+
+> "Tengo 14 frames PNG de la escena tomados con chromium headless + swiftshader. Úsalos para crear un GIF animado con Pillow optimizado para tamaño (target < 500 KB). Paleta adaptativa de 256 colores, duración 250 ms por frame."
+
+---
+
+### Fase 6 — Verificación
+
+> "Borra `resultados/` completamente y vuelve a correr `uv run python src/main.py` desde cero para confirmar reproducibilidad. Muéstrame el output completo con los nombres de los 6 archivos generados y sus tamaños."
+
+> "Corre `npm run build` en `ejercicio_2_escena_3d_interactiva/` y confirma que compila sin errores."
+
+---
+
+### Fase 7 — Documentación
+
+> "Escribe el `README.md` principal del repo con badges de shields.io, imágenes embebidas del pipeline en tabla HTML 3×2, GIF de la escena centrado, tabla de controles, checklist de requisitos del PDF, análisis técnico de decisiones, tabla de dificultades/soluciones, y sección de uso de IA con prompts por fase. El correo del estudiante es `ganzola@unal.edu.co`."
+
+---
 
 ### Qué se verificó manualmente
 
-- **Ej1**: ejecución completa del pipeline de principio a fin; inspección visual de los 6 PNGs (grises coherentes, HSV con canales de color visibles, suavizado apreciable, bordes nítidos, cajas YOLOv8 sobre personas y bus).
-- **Ej2**: carga de la escena en el navegador sin errores de consola; prueba de OrbitControls; verificación de cada animación (rover en movimiento, antena rotatoria, astronautas flotando, paneles siguiendo al rover); comprobación de que la bandera cambia de color al paso del rover; todos los sliders de Leva funcionales.
-- **Reproducibilidad**: `uv sync` desde cero (sin `.venv`) y `npm ci` + `npm run build` sin errores.
+- **Ej1**: inspección visual de los 6 PNGs (grises correctos, HSV con matiz visible, suavizado apreciable al comparar con original, bordes Canny nítidos sobre objetos principales, cajas YOLOv8 sobre personas y bus con etiquetas).
+- **Ej2**: apertura de la escena en navegador con WebGL activo; prueba de OrbitControls (orbit, zoom, pan); observación de cada animación en tiempo real; cambio de color de bandera al paso del rover; respuesta de todos los sliders Leva.
+- **Reproducibilidad**: entorno Python reconstruido desde cero con `uv sync`; proyecto Node con `npm ci` + `npm run build` sin errores.

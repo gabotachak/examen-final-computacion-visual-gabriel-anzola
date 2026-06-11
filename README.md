@@ -1,6 +1,6 @@
 # Examen Final — Computación Visual 2026-I
 
-**Estudiante:** Gabriel Anzola (`ga.anzola15@gmail.com`)  
+**Estudiante:** Gabriel Anzola (`ganzola@unal.edu.co`)  
 **Universidad Nacional de Colombia**
 
 ## Descripción general

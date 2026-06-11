@@ -4,7 +4,7 @@ Guía de trabajo para este repositorio. **Actualizar constantemente** conforme s
 
 ## Qué es este proyecto
 
-Examen Final de Computación Visual 2026-I (Universidad Nacional de Colombia), parte práctica. Entrega individual en repositorio. Estudiante: **Gabriel Anzola** (`ga.anzola15@gmail.com`).
+Examen Final de Computación Visual 2026-I (Universidad Nacional de Colombia), parte práctica. Entrega individual en repositorio. Estudiante: **Gabriel Anzola** (`ganzola@unal.edu.co`).
 
 Fuente de verdad de los requisitos: `examen_final_computacion_visual_2026I_practico.pdf` (en la raíz). Si hay duda, leer el PDF.
 
